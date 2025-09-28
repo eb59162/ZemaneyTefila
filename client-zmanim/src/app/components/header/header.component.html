@@ -1,0 +1,24 @@
+<div class="header-container">
+  <div class="logo-container">
+    <img
+      src="../../../assets/images/artech-logo.svg"
+      alt="ArTech Logo"
+      class="logo"
+    />
+  </div>
+  <div class="logo-container">
+    <img src="../../../assets/images/sidur.svg" alt="Tfila Logo" class="logo" />
+    <h1 class="app-title">זמני תפילה</h1>
+  </div>
+
+  <div class="user-details">
+    <div class="user-info">
+      <span class="user-name">{{ synagogue }}</span>
+      <span class="user-city">{{ userCity }}</span>
+    </div>
+    <button class="logout-button" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      התנתק
+    </button>
+  </div>
+</div>

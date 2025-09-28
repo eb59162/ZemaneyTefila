@@ -1,0 +1,138 @@
+.welcome-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  direction: rtl;
+}
+
+.welcome-content {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+header {
+  margin-bottom: 3rem;
+
+  .logo {
+    width: 120px;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+  }
+  .subtitle2 {
+    color: #7f8c8d;
+    font-size: 1rem;
+  }
+}
+
+.actions-container {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.action-card {
+  flex: 1;
+  min-width: 280px;
+  padding: 2rem;
+  border-radius: 15px;
+  background: #f8f9fa;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+
+  &:hover {
+    background: #2980b9;
+  }
+}
+
+.btn-secondary {
+  background: #2ecc71;
+  color: white;
+
+  &:hover {
+    background: #27ae60;
+  }
+}
+
+.support-section {
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+
+  h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+  }
+
+  .support-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-content {
+    padding: 2rem;
+  }
+
+  .action-card {
+    min-width: 100%;
+  }
+}

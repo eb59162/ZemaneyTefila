@@ -1,0 +1,44 @@
+<div class="welcome-container">
+  <div class="welcome-content">
+    <header>
+      <img
+        src="../../../assets/images/sidur.svg"
+        alt="Zmanim Logo"
+        class="logo"
+      />
+      <h1>ברוכים הבאים לזמן תפילה</h1>
+      <p class="subtitle">המערכת החכמה לניהול זמני תפילה לבית הכנסת</p>
+      <p class="subtitle2">לעילוי נשמת הרב מנשה בן שפרה זצוק"ל</p>
+    </header>
+
+    <div class="actions-container">
+      <div class="action-card">
+        <h2>משתמש קיים?</h2>
+        <p>התחבר כדי לנהל את זמני התפילה לבית הכנסת שלך</p>
+        <button class="btn-primary" (click)="navigateToLogin()">
+          כניסה למערכת
+        </button>
+      </div>
+
+      <div class="action-card">
+        <h2>משתמש חדש?</h2>
+        <p>צור חשבון חדש בקלות ובמהירות</p>
+        <button class="btn-secondary" (click)="navigateToRegister()">
+          הרשמה למערכת
+        </button>
+      </div>
+    </div>
+
+    <footer class="support-section">
+      <h3>צריכים עזרה?</h3>
+      <p>אנחנו כאן בשבילכם!</p>
+      <a
+        [href]="'https://mail.google.com/mail/?view=cm&fs=1&to=' + supportEmail"
+        target="_blank"
+        class="support-link"
+      >
+        {{ supportEmail }}
+      </a>
+    </footer>
+  </div>
+</div>

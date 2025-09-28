@@ -1,0 +1,98 @@
+<div class="rules-container">
+  <button class="rules-toggle" (click)="toggleRules()">
+    <i class="fas fa-info-circle"></i>
+    <span>{{
+      showRules ? "הסתר הנחיות  " : "לכללים לשימוש באתר לחץ כאן  "
+    }}</span>
+    <span>&nbsp;&nbsp; </span>
+    <i class="fas fa-chevron-down" *ngIf="!showRules"></i>
+    <i class="fas fa-chevron-up" *ngIf="showRules"></i>
+  </button>
+
+  <div class="rules-content" *ngIf="showRules">
+    <h2>כללים לשימוש באתר</h2>
+
+    <div class="rule-item">
+      <div class="rule-number">1</div>
+      <div class="rule-text">
+        <strong>מטרת האתר:</strong> יצירת לוח זמני תפילות לבית הכנסת שלכם לחלוקה
+        בקהילה. הלוח כולל את זמני התפילות לכל שבת מפרשת נצבים עד פרשת בראשית
+      </div>
+    </div>
+
+    <div class="rule-item">
+      <div class="rule-number">2</div>
+      <div class="rule-text">
+        <strong>יתרונות הלוח:</strong>
+        <ul>
+          <li>הנגשת זמני התפילות למתפללים בצורה ברורה ומסודרת</li>
+          <li>אין צורך לזכור את כללי התפילות השונים</li>
+          <li>חיבור בני הקהילה לבית הכנסת באמצעות לוח זמנים אישי בכל בית</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rule-item">
+      <div class="rule-number">3</div>
+      <div class="rule-text">
+        <strong>הוראות שימוש:</strong>
+        <ol>
+          <li>בחר חג או שבת מהרשימה
+            <p>אם התפילה שבחרת כבר שמורה לך משבת או חג אחר שבחרת, המערכת תיתן אפשרות להשתמש בכללים של אותו שבת או חג.
+            </p>
+            <small>לדוגמה: אם ביום ב' דראש השנה בחרת תפילת שחרית, כבר שמור לך במערכת הכללים של תפילת שחרית שבת ושל יום א' דראש השנה, המערכת תיתן אפשרות שגם ביום ב' יהיה את הכללים שבחרת לשבת או ליום א דראש השנה.
+            </small>
+          </li>
+          <li>בחרו תפילה מהרשימה או הוסיפו תפילה חדשה</li>
+          <li>בחרו זמן הלכתי (כגון שקיעה, זמן ק"ש, חצות) או שעה קבועה</li>
+          <li>הגדירו את מרווח הזמן (דקות או שעות לפני/אחרי הזמן שנבחר)</li>
+          <li>בחרו האם התפילה מתקיימת לפני או אחרי הזמן ההלכתי</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="rule-item">
+      <div class="rule-number">4</div>
+      <div class="rule-text">
+        <strong>שמירה והורדה:</strong> לאחר הגדרת כל זמני התפילות לחג מסוים, לחצו על "שמור תפילות לחג זה",
+        ולאחר בחירת תפילות לכל החגים ללחוץ על
+        "שמור הכל" כדי לשמור את ההגדרות במערכת, ועל "הורדת קובץ" כדי לקבל את הלוח
+        כקובץ Word/Excel. המערכת תשמור את הנתונים לשימוש עתידי.
+      </div>
+    </div>
+
+    <div class="rule-item">
+      <div class="rule-number">5</div>
+      <div class="rule-text">
+        <strong>עיצוב גרפי:</strong> הקובץ מורד כמסמך Word/Excel בסיסי. לקבלת עיצוב
+        מיוחד, שלחו את הקובץ בצירוף לוגו בית הכנסת למייל
+        <a
+          [href]="
+            'https://mail.google.com/mail/?view=cm&fs=1&to=' + designEmail
+          "
+          class="support-link"
+        >
+          {{ designEmail }}
+        </a>
+        ותקבלו עיצוב מקצועי בעלות של 40 ש"ח.
+      </div>
+    </div>
+
+    <div class="rule-item">
+      <div class="rule-number">6</div>
+      <div class="rule-text">
+        <strong>מקור הזמנים:</strong> זמני התפילות מבוססים על לוח השנה של חזון
+        שמים.
+      </div>
+    </div>
+
+    <div class="rule-item">
+      <div class="rule-number">7</div>
+      <div class="rule-text">
+        <strong>הערה חשובה:</strong> המערכת פותחה בקפידה לשימוש מהיר ומדויק. עם
+        זאת, אין אחריות על תקלות או בעיות. ויהי רצון שלא תצא תקלה חס וחלילה תחת
+        ידינו.
+      </div>
+    </div>
+  </div>
+</div>

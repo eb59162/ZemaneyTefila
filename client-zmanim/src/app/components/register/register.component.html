@@ -1,0 +1,183 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="logo-container">
+      <img src="assets/images/sidur.svg" alt="תפילה" class="prayer-logo" />
+    </div>
+    <h1>הרשמה למערכת</h1>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>שם מלא</label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="הכנס שם מלא"
+          [class.invalid]="
+            registerForm.get('name')?.invalid &&
+            registerForm.get('name')?.touched
+          "
+        />
+        <div
+          class="validation-error"
+          *ngIf="
+            registerForm.get('name')?.invalid &&
+            registerForm.get('name')?.touched
+          "
+        >
+          <span *ngIf="registerForm.get('name')?.errors?.['required']"
+            >שדה חובה</span
+          >
+          <span *ngIf="registerForm.get('name')?.errors?.['pattern']"
+            >שם יכול להכיל אותיות בעברית או באנגלית בלבד</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>אימייל</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="הכנס אימייל"
+          [class.invalid]="
+            registerForm.get('email')?.invalid &&
+            registerForm.get('email')?.touched
+          "
+        />
+        <div
+          class="validation-error"
+          *ngIf="
+            registerForm.get('email')?.invalid &&
+            registerForm.get('email')?.touched
+          "
+        >
+          <span *ngIf="registerForm.get('email')?.errors?.['required']"
+            >שדה חובה</span
+          >
+          <span *ngIf="registerForm.get('email')?.errors?.['email']"
+            >פורמט אימייל לא תקין</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>סיסמה</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="הכנס סיסמה"
+          [class.invalid]="
+            registerForm.get('password')?.invalid &&
+            registerForm.get('password')?.touched
+          "
+        />
+        <div
+          class="validation-error"
+          *ngIf="
+            registerForm.get('password')?.invalid &&
+            registerForm.get('password')?.touched
+          "
+        >
+          <span *ngIf="registerForm.get('password')?.errors?.['required']"
+            >שדה חובה</span
+          >
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']"
+            >סיסמה חייבת להכיל לפחות 6 תווים</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>מספר טלפון</label>
+        <input
+          type="tel"
+          formControlName="phoneNumber"
+          placeholder="הכנס מספר טלפון"
+          [class.invalid]="
+            registerForm.get('phoneNumber')?.invalid &&
+            registerForm.get('phoneNumber')?.touched
+          "
+        />
+        <div
+          class="validation-error"
+          *ngIf="
+            registerForm.get('phoneNumber')?.invalid &&
+            registerForm.get('phoneNumber')?.touched
+          "
+        >
+          <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']"
+            >שדה חובה</span
+          >
+          <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']"
+            >מספר טלפון לא תקין</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>עיר</label>
+        <select
+          formControlName="city"
+          [class.invalid]="
+            registerForm.get('city')?.invalid &&
+            registerForm.get('city')?.touched
+          "
+        >
+          <option value="">בחר עיר</option>
+          <option *ngFor="let city of availableCities" [value]="city">
+            {{ city }}
+          </option>
+        </select>
+        <div
+          class="validation-error"
+          *ngIf="
+            registerForm.get('city')?.invalid &&
+            registerForm.get('city')?.touched
+          "
+        >
+          <span *ngIf="registerForm.get('city')?.errors?.['required']"
+            >שדה חובה</span
+          >
+        </div>
+      </div>
+      <div class="form-group">
+        <label>בית כנסת</label>
+        <input
+          type="text"
+          formControlName="synagogue"
+          placeholder="הכנס שם בית כנסת"
+          [class.invalid]="
+            registerForm.get('synagogue')?.invalid &&
+            registerForm.get('synagogue')?.touched
+          "
+        />
+        <div
+          class="validation-error"
+          *ngIf="
+            registerForm.get('synagogue')?.invalid &&
+            registerForm.get('synagogue')?.touched
+          "
+        >
+          <span *ngIf="registerForm.get('synagogue')?.errors?.['required']"
+            >שדה חובה</span
+          >
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="register-button"
+        [disabled]="!registerForm.valid || isSubmitting"
+      >
+        {{ isSubmitting ? "מתבצעת הרשמה..." : "הרשם" }}
+      </button>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="login-link">
+        <a routerLink="/login">כבר רשום? התחבר כאן</a>
+      </div>
+    </form>
+  </div>
+</div>

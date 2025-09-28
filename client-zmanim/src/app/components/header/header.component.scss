@@ -1,0 +1,98 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  direction: rtl;
+  height: 70px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3f51b5;
+  margin: 0;
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.user-city {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(45deg, #d32f2f, #f44336);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: linear-gradient(45deg, #b71c1c, #d32f2f);
+    transform: translateY(-2px);
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .app-title {
+    font-size: 1.2rem;
+  }
+
+  .user-name,
+  .user-city {
+    font-size: 0.8rem;
+  }
+
+  .logout-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}

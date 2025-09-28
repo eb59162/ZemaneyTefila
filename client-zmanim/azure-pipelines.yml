@@ -1,0 +1,26 @@
+trigger:
+  - master
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: "Install Node.js"
+
+  - script: |
+      npm install -g @angular/cli
+      npm install
+    displayName: "Install dependencies"
+
+  - script: |
+      ng build --configuration=production
+    displayName: "Build Angular app"
+
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: "/dist/zmanim-v2"
+      api_location: ""
+      output_location: ""

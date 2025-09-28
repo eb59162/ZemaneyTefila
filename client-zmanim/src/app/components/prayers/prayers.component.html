@@ -1,0 +1,466 @@
+<app-header></app-header>
+<div class="prayers-container">
+  <section class="welcome-section fade-in">
+    <h1>ברוך הבא למערכת ניהול זמני התפילה</h1>
+    <p class="subtitle">
+      כאן תוכל להתאים את זמני התפילה שלך בצורה מדויקת ואישית
+    </p>
+  </section>
+
+  <div class="guide-card slide-up">
+    <h3>איך להשתמש במערכת?</h3>
+    <app-rules></app-rules>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>
+            <i class="fas fa-book-open"></i>
+            בחירת חג
+          </h4>
+          <p>בחר את החג/שבת שברצונך לקבוע לו זמני תפילות מהרשימה</p>
+          <small>ישנה אפשרות להשתמש בכללי תפילה שמורים לתפילה נבחרת</small>
+                  </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>
+            <i class="fas fa-book-open"></i>
+            בחירת תפילה
+          </h4>
+          <p>בחר את התפילה שברצונך לקבוע לה זמן מהרשימה</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>
+            <i class="fas fa-cloud-sun"></i>
+            בחירת זמן הלכתי
+          </h4>
+          <p>בחר את הזמן ההלכתי שישמש כבסיס לחישוב</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>
+            <i class="far fa-clock"></i>
+            התאמה אישית
+          </h4>
+          <p>הוסף זמן לפני או אחרי הזמן ההלכתי לפי הצורך</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Holiday selection UI -->
+  <div class="selection-form">
+
+    <h2>
+      <i class="fas fa-plus-circle"></i>
+      בחירת חג
+    </h2>
+    <div class="form-group" *ngIf="holidays && holidays.length">
+      <label>
+        <i class="fas fa-shofar
+      "></i>
+        בחר חג
+      </label>
+      <select [(ngModel)]="currentHolidaySelection.hebrewDate" class="form-control" (change)="onHolidaySelect($event)">
+        <option [ngValue]="null">בחר חג</option>
+        <option *ngFor="let holiday of holidays" [ngValue]="holiday">
+          {{ holiday }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!-- Selection Form -->
+  <div class="selection-form">
+    <h2>
+      <i class="fas fa-plus-circle"></i>
+      הוספת תפילה חדשה
+    </h2>
+    <!-- Prayer Selection -->
+    <div class="form-group">
+      <label>
+        <i class="fas fa-book-open"></i>
+        בחר תפילה</label>
+      <select [(ngModel)]="currentSelection.tefila" class="form-control" required (change)="onPrayerSelect($event)">
+        <option [ngValue]="-1" disabled selected>בחר תפילה</option>
+        <option [value]="'custom'">+ תפילה נוספת</option>
+        <!-- <option *ngFor="let prayer of prayers" [ngValue]="prayer.id"> -->
+        <option *ngFor="let prayer of prayers" [ngValue]="prayer.id">
+          {{ prayer.name }}
+        </option>
+      </select>
+      <input *ngIf="showCustomInput" type="text" [(ngModel)]="currentSelection.customTefilaName"
+        placeholder="הכנס שם תפילה" class="custom-prayer-input" />
+    </div>
+    <div class="form-group" *ngIf="selectedPrayersDetails.length > 0">
+      <label><i class="fas fa-book-open"></i>
+        בחר זמני תפילה שמורים לתפילה זו</label>
+      <div class="items-list">
+        <select [(ngModel)]="keepedTefilaTimes.tefila" class="form-control" required
+          (change)="onSelectedPrayerSelect($event)">
+          <option [ngValue]="-1" disabled selected>בחר זמני תפילה שמורים</option>
+          <option *ngFor="let prayer of selectedPrayersDetails" [ngValue]="prayer.id">
+            <span *ngIf="prayer.isFixedTime">
+              תפילת {{ getPrayerName(prayer) }} זמן קבוע:
+              {{ prayer.fixedTime }}
+            </span>
+            <span *ngIf="!prayer.isFixedTime">
+              תפילת {{ getPrayerName(prayer) }}
+              {{
+              prayer.personalCalculationTime
+              ? formatTimeWithUnits(prayer.personalCalculationTime)
+              : ""
+              }}
+              {{ prayer.isBeforeTime ? "לפני" : "אחרי" }}
+              {{
+              prayer.halachicTimeId
+              ? getHalachicTimeName(prayer.halachicTimeId)
+              : ""
+              }}
+            </span>
+            <span *ngIf="prayer.dayType">
+              של {{ prayer.dayType === "friday" ? "ערב שבת/חג" : "שבת/חג" }}
+            </span>
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <div class="form-group">
+        <label>
+          <i class="fas fa-clock"></i>
+          חישוב שעת התפילה לפי:</label>
+        <select [(ngModel)]="currentSelection.isFixedTime">
+          <option [ngValue]="false">חישוב לפי זמני היום</option>
+          <option [ngValue]="true">שעה קבועה</option>
+        </select>
+      </div>
+      <!-- Halachic Time Selection -->
+      <div *ngIf="!currentSelection.isFixedTime" class="form-group">
+        <label>
+          <i class="fas fa-cloud-sun"></i>
+          זמני היום</label>
+        <select [(ngModel)]="currentSelection.halachicTimeId" class="form-control" required>
+          <option [ngValue]="null" disabled selected>זמני היום</option>
+          <option *ngFor="let time of sortedHalachicTimes" [value]="time.id">
+            {{ time.hebrewName }}
+          </option>
+        </select>
+      </div>
+      <!-- חישוב לפי שישי או שבת -->
+      <div *ngIf="!currentSelection.isFixedTime && requiresDaySelection()" class="form-group">
+        <label>
+          <i class="fas fa-calendar-day"></i>
+          האם לחשב את הזמן לפי {{ getCurrentHalachicTime() }} של ערב שבת/חג או שבת/חג?
+        </label>
+        <select [(ngModel)]="currentSelection.dayType" class="form-control" required>
+          <option *ngFor="let type of dayTypes" [value]="type.value">
+            {{ type.label }}
+          </option>
+        </select>
+      </div>
+      <!-- Time Picker -->
+      <div *ngIf="!currentSelection.isFixedTime" class="form-group">
+        <label>
+          <i class="far fa-clock"></i>
+          הוסף זמן בדקות לפני/אחרי הזמן ההלכתי לחישוב שעת התפילה</label>
+        <div class="time-row">
+          <div class="time-input-container">
+            <input #timeInput type="text" [ngModel]="displayTime" (input)="formatTimeInput($event)" placeholder="00:00"
+              maxlength="5" />
+            <span class="format-hint">דקות:שעות</span>
+          </div>
+          <div class="before-after-container">
+            <select [(ngModel)]="currentSelection.isBeforeTime">
+              <option [ngValue]="false">אחרי</option>
+              <option [ngValue]="true">לפני</option>
+            </select>
+          </div>
+
+          <div class="halachic-time-container">
+            {{
+            currentSelection.halachicTimeId
+            ? getCurrentHalachicTime()
+            : "זמן ההלכה שנבחר"
+            }}
+          </div>
+        </div>
+        <div class="rounding-option">
+          <label>
+            <i class="far fa-clock"></i>
+            האם לעגל ל-5 דקות הקרובות? לדוגמה 06:13 לעגל ל 06:15
+          </label>
+          <select [(ngModel)]="currentSelection.roundToNearFiveMinutes" class="rounding-select">
+            <option [ngValue]="true">עיגול ל-5 דקות</option>
+            <option [ngValue]="false">זמן מדויק</option>
+          </select>
+        </div>
+      </div>
+      <!-- Fixed time section -->
+      <div *ngIf="currentSelection.isFixedTime||keepedTefilaTimes==null" class="form-group">
+        <input type="time" [(ngModel)]="currentSelection.fixedTime" />
+        <div class="flex-auto">
+          <p-calendar [(ngModel)]="currentSelection.fixedTime" [iconDisplay]="'input'" [showIcon]="true"
+            [timeOnly]="true" inputId="templatedisplay" placeholder="00:00" [style]="{ direction: 'ltr' }">
+            <ng-template pTemplate="inputicon">
+              <i class="pi pi-clock"></i>
+            </ng-template>
+          </p-calendar>
+        </div>
+      </div>
+    </div>
+    <!-- Validation messages -->
+    <div class="validation-messages" *ngIf="showValidationErrors && !isSelectionValid()">
+      <div class="validation-error" *ngFor="let error of getValidationErrors()">
+        {{ error }}
+      </div>
+    </div>
+    <div class="button-group">
+      <button (click)="addSelection()" class="btn-add" [class.success]="isAddSuccess" [disabled]="isAddSuccess"
+        [title]="!isSelectionValid() ? getValidationErrors().join(', ') : ''">
+        <i class="fas" [ngClass]="isAddSuccess ? 'fa-check' : 'fa-plus'"></i>
+        {{ isAddSuccess ? "נוסף בהצלחה!" : "הוסף לרשימה" }}
+      </button>
+      <button (click)="resetSelection()" class="btn-reset">
+        <i class="fas fa-undo"></i>
+        נקה בחירה
+      </button>
+    </div>
+    <!-- Selected Items List -->
+     
+    <div class="selected-items">
+      <!-- תנאי הצגה של התפילות או החגים -->
+      <div *ngIf="!showHolidays">
+      <h2>
+        <i class="fas fa-list-ul"></i>
+        רשימת תפילות שנבחרו
+      </h2>
+
+      <div class="drag-instructions">
+        <i class="fas fa-arrows-alt"></i>
+        ניתן לגרור ולסדר מחדש את התפילות
+      </div>
+
+      <div class="items-list holiday" *ngIf="(selectedHoliday && selectedHoliday.hebrewDate !== '')">
+          <div> שבת/חג: {{selectedHoliday.hebrewDate}}</div>
+             <div class="items-list" *ngIf="selectedHoliday.tefilos.length > 0" cdkDropList (cdkDropListDropped)="drop($event)"><div
+          *ngFor="let item of selectedHoliday.tefilos; let i = index"
+          class="selected-item"
+          cdkDrag
+        >
+          <div class="drag-handle">⋮⋮</div>
+          <div class="item-details">
+            <!-- Display for fixed time prayers -->
+            <span *ngIf="item.isFixedTime">
+              תפילה: {{ getPrayerName(item) }} זמן קבוע:
+              {{ item.fixedTime }}
+            </span>
+            <!-- Display for dynamic time prayers -->
+            <span *ngIf="!item.isFixedTime">
+              תפילה: {{ getPrayerName(item) }}
+              {{
+                item.personalCalculationTime
+                  ? formatTimeWithUnits(item.personalCalculationTime)
+                  : ""
+              }}
+              {{ item.isBeforeTime ? "לפני" : "אחרי" }}
+              {{
+                item.halachicTimeId
+                  ? getHalachicTimeName(item.halachicTimeId)
+                  : ""
+              }}
+            </span>
+            <span *ngIf="item.dayType">
+              של {{ item.dayType === "friday" ? "ערב שבת" : "שבת" }}
+            </span>
+          </div>
+          <button (click)="removeSelection(i)" class="btn-remove">
+            <i class="fas fa-times"></i>
+            הסר
+          </button>
+        </div>
+      </div>
+        </div>
+<div class="drag-instructions" >    <i class="fas fa-info-circle"></i>
+לאחר בחירת התפילות יש ללחוץ על "שמור תפילות לחג זה"</div>
+
+<div class="drag-instructions" >     <i class="fas fa-info-circle"></i>
+לאחר בחירת החגים יש ללחוץ על "שמור הכל"</div>
+</div>
+<!-- הצגת רשימת החגים ותפילותיהם -->
+ <div class="holiday-container" *ngIf="showHolidays">
+   <h2> 
+    <i class="fas fa-list-ul"></i> רשימת החגים שנבחרו</h2>
+     <div class="items-list" *ngFor="let holiday of selectedHolidays; let i=index"> 
+      <br>
+      <h3 class="item-details">חג/שבת: {{ holiday.hebrewDate }}</h3>
+      <!-- הצגת תפילות  -->
+       <button class="btn-prayer" (click)="toggleTefilos(i)"> 
+        <i class="icon" [ngClass]="showSelectedHoliday[i] ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i>
+          הצג זמני תפילות לחג זה</button>
+        <div *ngIf="showSelectedHoliday[i]" >
+          <h4>זמני תפילות:</h4>
+          <div class="items-list" *ngFor="let tefila of holiday.tefilos">
+          <!-- Display for fixed time prayers -->
+          
+          <div class="item-details">
+          <span *ngIf="tefila.isFixedTime">
+            תפילה: {{ getPrayerName(tefila) }} זמן קבוע:
+            {{ tefila.fixedTime }}
+          </span>
+          <!-- Display for dynamic time prayers -->
+          <span *ngIf="!tefila.isFixedTime">
+            תפילה: {{ getPrayerName(tefila) }}
+            {{
+            tefila.personalCalculationTime
+            ? formatTimeWithUnits(tefila.personalCalculationTime)
+            : ""
+            }}
+            {{ tefila.isBeforeTime ? "לפני" : "אחרי" }}
+            {{
+            tefila.halachicTimeId
+            ? getHalachicTimeName(tefila.halachicTimeId)
+            : ""
+            }}
+          </span>
+          <span *ngIf="tefila.dayType">
+            של {{ tefila.dayType === "friday" ? "ערב שבת" : "שבת" }}
+          </span>
+           </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="save-section">
+        <button class="save-draft-btn" [class.success]="isSaveSuccess" (click)="saveSelectedPrayers()"
+          [disabled]="selectedPrayers.length === 0">
+          <i class="fas fa-save"></i>
+          {{ isSaveSuccess ? " התפילות נשמרו בהצלחה!" : "שמור תפילות לחג זה" }}
+        </button>
+        <!-- כפתור להצגת החגים והתפילות שנבחרו -->
+            <button class="save-draft-btn" (click)="toggleHolidays()" [disabled]="selectedHolidays.length==0">
+      {{showHolidays?'הסתר הכל':'הצג הכל'}}</button>
+        <button class="save-draft-btn" [class.success]="areSaveSuccess" (click)="saveSelectedHolidaysWithPrayers()"
+          [disabled]="selectedPrayers.length === 0">
+          <i class="fas fa-save"></i>
+          {{ areSaveSuccess ? "נשמר בהצלחה!" : "שמור הכל" }}
+        </button>
+        <button class="save-draft-btn" [class.disabled]="
+              selectedPrayers.length === 0 || isLoadingWord || !hasSaved
+            " (click)="createFilePrayers()" [disabled]="
+              selectedPrayers.length === 0 || isLoadingWord || !hasSaved
+            ">
+          <ng-container *ngIf="!isLoadingWord">
+            <i class="fas fa-file-word"></i>
+            {{ isCreatedSuccess ? "הקובץ נוצר בהצלחה!" : "הורדה לקובץ וורד" }}
+          </ng-container>
+          <ng-container *ngIf="isLoadingWord">
+            <div class="spinner-container">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>
+                אנחנו מכינים עבורך את לוח זמני התפילות לחגי תשרי תשפ"ו
+                <br />
+                אנו מודים על הסבלנות
+              </span>
+            </div>
+          </ng-container>
+        </button>
+        <button class="save-draft-btn excel-btn" [class.disabled]="
+              selectedPrayers.length === 0 || isLoadingExcel || !hasSaved
+            " (click)="createExcelPrayers()" [disabled]="
+              selectedPrayers.length === 0 || isLoadingExcel || !hasSaved
+            ">
+          <ng-container *ngIf="!isLoadingExcel">
+            <i class="fas fa-file-excel"></i>
+            {{
+            isExcelCreatedSuccess
+            ? "קובץ אקסל נוצר בהצלחה!"
+            : "הורדה לקובץ אקסל"
+            }}
+          </ng-container>
+          <ng-container *ngIf="isLoadingExcel">
+            <div class="spinner-container">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>
+                אנחנו מכינים עבורך את לוח זמני התפילות בפורמט אקסל.
+                <br />
+                אנו מודים על הסבלנות
+              </span>
+            </div>
+          </ng-container>
+        </button>
+      </div>
+      <div class="no-items" *ngIf="selectedPrayers.length === 0">
+        לא נבחרו תפילות עדיין
+      </div>
+    <!-- Premium Design Section -->
+    <div style="margin-top: 30px"></div>
+    <div class="selected-items">
+      <h2>
+        <i class="fas fa-star"></i>
+        עיצוב מקצועי ללוח זמני התפילות
+      </h2>
+
+      <div class="guide-card slide-up" id="designSection">
+        <h3>שדרוג ללוח זמנים מעוצב</h3>
+        <p>
+          בעלות סמלית של <strong>40 ₪</strong> בלבד, תקבלו עיצוב יוקרתי ומכובד
+          ללוח זמני התפילה שלכם. העיצוב כולל גרפיקה מותאמת אישית, בחירת צבעים
+          וגופנים, ופורמט מוכן להדפסה באיכות גבוהה.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>
+                <i class="fas fa-envelope"></i>
+                יצירת קשר
+              </h4>
+              לפרטים נוספים והזמנות, ניתן לפנות:
+              <a [href]="
+                  'https://mail.google.com/mail/?view=cm&fs=1&to=' + designEmail
+                " class="support-link" target="_blank">
+                {{ designEmail }}
+              </a>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>
+                <i class="fas fa-paint-brush"></i>
+                עיצוב מותאם אישית
+              </h4>
+              <p>נתאים את העיצוב לצרכים ולסגנון שלכם</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>
+                <i class="fas fa-file-pdf"></i>
+                קבלת קובץ מוכן להדפסה
+              </h4>
+              <p>תקבלו קובץ PDF באיכות גבוהה מוכן להדפסה</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <i class="fas fa-envelope"></i>
+          תמיכה טכנית
+          <a [href]="
+              'https://mail.google.com/mail/?view=cm&fs=1&to=' + supportEmail
+            " target="_blank">
+            {{ supportEmail }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
